@@ -1,6 +1,7 @@
 
 # instead of getting the hex representation of the txt file, 
-# we directly load the hex.
+# we directly load the hex that is represented by the ascii of the txt file. 
+
 def load_ctxts(l, indexes):
     WIDTH = 2
 
@@ -12,11 +13,8 @@ def load_ctxts(l, indexes):
     return l
 
 ctxts = []
-load_ctxts(ctxts, [4, 10, 16, 17])
-
-xored_plaintexts = bytes([a ^ b for a, b in zip(ctxts[0], ctxts[1])])
-
-# load the shit
+OTPs = [4, 10, 16, 17]
+load_ctxts(ctxts, OTPs)
 
 def drag_crib(crib_str, xor_data, pos = None):
     """
@@ -46,14 +44,68 @@ def drag_crib(crib_str, xor_data, pos = None):
         except:
             pass
 
+
+# --------------------------------------------------------------
+
+def getKey(M, CTXT):
+    M = M.encode('utf-8')
+
+    return bytes([a ^ b for a, b in zip(M, CTXT)])
+
+def removeFogOfWar():
+    M = 'in the attention economy, time is bartered'
+
+    k = getKey(M, ctxts[1])
+
+    # now for all of the strings, lets see what we have.
+    i = 0
+    for ctxt in ctxts: 
+        tmp = bytes([a ^ b for a, b in zip(ctxt, k)])
+        decoded = tmp.decode('ascii')
+        print(f'--- Ciphertext {OTPs[i]} current progress: ---\n{decoded}\n')
+        i += 1
+
+# --------------------------------------------------------------
+# 0 -> 4
+# 1 -> 10 
+# 2 -> 16
+# 3 -> 17
+
+# Current Strings: 
+
+# hoboken began as lenape homeland. dutch settlers 
+# in the attention economy, time is bartered for fl
+# the enigma machine, a german rotor cipher, mixed
+# chicago rose at a crossroads of water and rail, r
+
+# --------------------------------------------------------------
+
+'''Workspace'''
+
+# removeFogOfWar()
+
+IND1 = 0
+IND2 = 1
+
+xored_plaintexts = bytes([a ^ b for a, b in zip(ctxts[IND1], ctxts[IND2])])
+
+cribs = [
+    "hoboken began as lenape homeland. dutch settlers "
+    ]
+
+for crib in cribs:
+    drag_crib(crib, xored_plaintexts, 1)
+    print('\n')
+
+# --------------------------------------------------------------
+
+# Code Graveyard
+
+'''
 cribs = [
     "in the attention economy, time is a "
     ]
 
-# hoboken began as lenape homeland. 
-# in the attention economy, time is the most expensive currenc
-
-'''
 nextWordGuess = []
 with open("wordsToTry.txt", "r") as f:
     for line in f:
@@ -62,8 +114,6 @@ with open("wordsToTry.txt", "r") as f:
 for n in nextWordGuess:
     drag_crib(cribs[0] + n, xored_plaintexts, pos=1)
 
-for crib in cribs:
-    drag_crib(crib, xored_plaintexts, 1)
-    print('\n')
+
 '''
 
