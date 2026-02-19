@@ -53,7 +53,7 @@ def getKey(M, CTXT):
     return bytes([a ^ b for a, b in zip(M, CTXT)])
 
 def removeFogOfWar():
-    M = 'in the attention economy, time is bartered'
+    M = 'in the attention economy, time is bartered for fl'
 
     k = getKey(M, ctxts[1])
 
@@ -73,10 +73,10 @@ def removeFogOfWar():
 
 # Current Strings: 
 
-# hoboken began as lenape homeland. dutch settlers 
-# in the attention economy, time is bartered for fl
-# the enigma machine, a german rotor cipher, mixed
-# chicago rose at a crossroads of water and rail, r
+# hoboken began as lenape homeland. dutch settlers arrived in the seventeenth century. later, the stevens family shaped its growth with industr
+# in the attention economy, time is bartered for flickers of novelty. platforms design infinite scroll, alerts, and streaks to harvest focus, c
+# the enigma machine, a german rotor cipher, mixed letters through shifting wiring and a plugboard, yielding vast keyspaces. daily keys and mes
+# chicago rose at a crossroads of water and rail, rebuilt after the 1871 fire with steel frames and daring architects who birthed skyscrapers. 
 
 # --------------------------------------------------------------
 
@@ -84,13 +84,13 @@ def removeFogOfWar():
 
 # removeFogOfWar()
 
-IND1 = 0
-IND2 = 1
+IND1 = 2
+IND2 = 3
 
 xored_plaintexts = bytes([a ^ b for a, b in zip(ctxts[IND1], ctxts[IND2])])
 
 cribs = [
-    "hoboken began as lenape homeland. dutch settlers "
+    "the enigma machine, a german rotor cipher, mixed letters through shifting wiring and a plugboard, yielding vast keyspaces. daily keys and mes"
     ]
 
 for crib in cribs:
