@@ -10,7 +10,6 @@ def load_ctxts(l):
         ptxt_str = ptxtfile.read()
         ptxt_bytes = ptxt_str.encode('utf-8')
         l.append(ptxt_bytes)
-    
     return
 
 ctxts = []

@@ -13,7 +13,7 @@ def load_ctxts(l):
 ctxts = []
 load_ctxts(ctxts)
 
-xored_plaintexts = bytes([a ^ b for a, b in zip(ctxts[4], ctxts[8])])
+xored_plaintexts = bytes([a ^ b for a, b in zip(ctxts[3], ctxts[9])])
 
 # load the shit
 
