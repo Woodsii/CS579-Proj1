@@ -26,21 +26,17 @@ def drag_crib(crib_str, xor_data, pos = None):
     
     for i in range(len(xor_data) - len(crib) + 1):
 
-        if pos and pos <= i:
-            continue 
+        if pos and not pos == i:
+            continue
         chunk = xor_data[i : i + len(crib)]
 
         result = bytes([a ^ b for a, b in zip(chunk, crib)])
         
         try:
-            # Check if the result is printable ASCII text
             decoded = result.decode('ascii')
-            # Filter for common English characters to reduce noise
             if all(32 <= ord(c) <= 126 for c in decoded):
-                print(f"--- Dragging crib: '{crib_str}' ---")
-                # check if the english word is a real english word.
+                print(f"--- Dragging crib: '{crib_str[:10]}...' ---")
                 print(f"Pos {i}: {decoded}")
-                print()
         except:
             pass
 
@@ -53,10 +49,10 @@ def getKey(M, CTXT):
     return bytes([a ^ b for a, b in zip(M, CTXT)])
 
 def removeFogOfWar():
-    M = 'in the attention economy, time is bartered for fl'
+    M = 'the enigma machine, a german rotor cipher, mixed letters through shifting wiring and a plugboard, yielding vast keyspaces. daily keys and message procedures guarded secrecy, yet operator habits leaked patterns. allied analysts combined math, crib-finding, and polish insights, building electromechanical bombes to test permutations. bletchley park turned signals into intelligence, shortening the war and proving computation plus rigor can pierce layered secrecy without brute force.'
 
-    k = getKey(M, ctxts[1])
-
+    k = getKey(M, ctxts[2])
+    
     # now for all of the strings, lets see what we have.
     i = 0
     for ctxt in ctxts: 
@@ -73,29 +69,44 @@ def removeFogOfWar():
 
 # Current Strings: 
 
-# hoboken began as lenape homeland. dutch settlers arrived in the seventeenth century. later, the stevens family shaped its growth with industr
-# in the attention economy, time is bartered for flickers of novelty. platforms design infinite scroll, alerts, and streaks to harvest focus, c
-# the enigma machine, a german rotor cipher, mixed letters through shifting wiring and a plugboard, yielding vast keyspaces. daily keys and mes
-# chicago rose at a crossroads of water and rail, rebuilt after the 1871 fire with steel frames and daring architects who birthed skyscrapers. 
+# hoboken began as lenape homeland. dutch settlers arrived in the seventeenth century. later, the stevens family shaped its growth with industry and education,
+# founding stevens institute of technology. the city became a hub for shipping and manufacturing during the nineteenth century. immigrants brought culture and
+# resilience. music and arts flourished; frank sinatra rose from its lively streets. today, hoboken stands as a vibrant community along hudson river with 
+# historic charm, modern spirit and [missing]
+
+# in the attention economy, time is bartered for flickers of novelty. platforms design infinite scroll, alerts, and streaks to harvest focus, converting 
+# glances into revenue. algorithms model desire, amplify outrage, and reward impulsive taps, optimizing for engagement above meaning. creators chase metrics
+# while audiences drift, auctioning their concentration to the highest bidder. attention becomes the scarce resource, shaping behavior and taste in a market 
+# where distraction is king. 
+
+# the enigma machine, a german rotor cipher, mixed letters through shifting wiring and a plugboard, yielding vast keyspaces. daily keys and message procedures 
+# guarded secrecy, yet operator habits leaked patterns. allied analysts combined math, crib-finding, and polish insights, building electromechanical bombes to 
+# test permutations. bletchley park turned signals into intelligence, shortening the war and proving computation plus rigor can pierce layered secrecy without 
+# brute force.
+
+# chicago rose at a crossroads of water and rail, rebuilt after the 1871 fire with steel frames and daring architects who birthed skyscrapers. stockyards, 
+# canals, and grain shaped commerce, while neighborhoods forged music, activism, and resilient culture. the lakefront sets wind against glass towers, trains 
+# thread alleys, and grids map ambitious across prarie. the city endures booms and storms, reinventing itself with grit, invention, and a taste for big ideas 
+# under a wide midwestern sky.
 
 # --------------------------------------------------------------
 
 '''Workspace'''
 
-# removeFogOfWar()
+removeFogOfWar()
 
-IND1 = 2
-IND2 = 3
+IND1 = 0
+IND2 = 2
+OFFSET = 314
 
 xored_plaintexts = bytes([a ^ b for a, b in zip(ctxts[IND1], ctxts[IND2])])
 
-cribs = [
-    "the enigma machine, a german rotor cipher, mixed letters through shifting wiring and a plugboard, yielding vast keyspaces. daily keys and mes"
-    ]
+# print(f"length of XORed CTXTs: {len(xored_plaintexts)}")
 
-for crib in cribs:
-    drag_crib(crib, xored_plaintexts, 1)
-    print('\n')
+crib = " resilience. music and arts flourished; frank sinatra rose from its lively streets. today, hoboken stands as a vibrant community along hudson river with historic charm, modern spirit"
+
+# drag_crib(crib, xored_plaintexts, OFFSET)
+print('\n')
 
 # --------------------------------------------------------------
 
@@ -116,4 +127,3 @@ for n in nextWordGuess:
 
 
 '''
-
