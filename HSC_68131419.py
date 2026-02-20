@@ -1,6 +1,6 @@
 from pathlib import Path
 
-CIPHERTEXT_PATH = Path(r"C:\Users\Michael Buzzetta\Documents\CS579\CS579-Proj1\ctxts\08.txt")
+CIPHERTEXT_PATH = Path(r"C:\Users\Michael Buzzetta\Documents\CS579\CS579-Proj1\ctxts\13.txt")
 
 MAP = {
     "391": " ",

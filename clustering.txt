@@ -1,9 +1,14 @@
 3, 6, 8, 11, 13, 14, 19, 20 -> misc decimal encoded
 
 
+3, 11, 20 -> misc decimal encoded
+
+
+
 Completed: 
 1 -> Shift Cipher
 4, 10, 16, 17 -> OTP
 2, 18 -> Vignere Cipher 
 7, 15 -> Monoalphabetic Subsitution
 5, 9, 12 -> Vignere with spaces
+6, 8, 13, 14, 19 ->Homophonic Subsitution Cipher
