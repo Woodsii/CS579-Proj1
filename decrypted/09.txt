@@ -1,0 +1,13 @@
+alice said, "every time we try to set up a shared key, something gets in the way. either the channel is noisy or someone might be listening."
+
+bob nodded. "yeah, and even when we agree on a method, we still have to worry about attackers guessing parts of the exchange."
+
+"i keep thinking about how simple it sounds in theory," alice replied, "two people just mix secrets and end up with the same key."
+
+bob sighed. "but in practice, making sure no one else learns anything is the hard part."
+
+"exactly," alice said. "the math is solid, but the real world is messy."
+
+bob added, "still, if we get it right, we can talk safely."
+
+alice smiled. "then let's keep trying."
