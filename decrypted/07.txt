@@ -1,0 +1,5 @@
+mira sat in a small office surrounded by whiteboards filled with equations. she was part of a team designing a new cryptographic protocol, and the rule was simple: everything had to be open. no hidden constants, no unexplained steps, no quiet shortcuts that only insiders understood. if a choice could not be justified in plain language, it did not belong in the design.
+
+as the team reviewed each component, they posted drafts online for anyone to inspect. researchers from around the world sent comments, pointing out weak spots and suggesting improvements. sometimes the feedback was sharp, but mira preferred that to silence. every correction made the system stronger.
+
+by the end of the week, the protocol looked cleaner and more reliable. transparency had slowed them down, but it also kept them honest. in a field built on trust, that mattered more than speed.

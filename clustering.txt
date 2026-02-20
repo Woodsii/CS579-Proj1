@@ -1,7 +1,9 @@
 3, 6, 8, 11, 13, 14, 19, 20 -> misc decimal encoded
-5, 7, 9, 12, 15 -> Homophonic Substitution?
+5, 9, 12 -> Homophonic Substitution?
+
+7, 15 -> Monoalphabetic Subsitution
 
 Completed: 
 1 -> Shift Cipher
 4, 10, 16, 17 -> OTP
-2, 18 -> Subsitution/Vignere Cipher 
+2, 18 -> Vignere Cipher 
