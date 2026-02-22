@@ -1,6 +1,3 @@
-3, 6, 8, 11, 13, 14, 19, 20 -> misc decimal encoded
-
-
 3, 11, 20 -> misc decimal encoded
 
 

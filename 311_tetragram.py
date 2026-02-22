@@ -1,115 +1,199 @@
-import math
-import random
-from collections import Counter, defaultdict
 from pathlib import Path
-import re
+from collections import Counter
 
-ALPHABET = list(" etaoinshrdlucmfwypvbgkjqxz.,'")  # includes space + punctuation
+CIPHERTEXT_PATH = Path(r"C:\Users\Michael Buzzetta\Documents\CS579\CS579-Proj1\ctxts\03.txt")
 
-def load_cipher(path):
-    s = Path(path).read_text(encoding="utf-8", errors="ignore")
-    digits = "".join(ch for ch in s if ch.isdigit())
-    if len(digits) % 3 != 0:
-        raise ValueError("Ciphertext length not divisible by 3.")
-    return [digits[i:i+3] for i in range(0, len(digits), 3)]
+SPACE_CODES = {
+    "765", "451", "256", "165", "586",
+    "613", "848", "395", "436", "825", "948"
+}
 
-def load_quadgrams(path):
-    # expected format: "TION 12345" per line
-    quad = {}
-    total = 0
-    for line in Path(path).read_text(encoding="utf-8", errors="ignore").splitlines():
-        line = line.strip()
-        if not line:
-            continue
-        g, n = line.split()
-        n = int(n)
-        quad[g.lower()] = n
-        total += n
-    floor = math.log10(0.01 / total)
-    logp = {g: math.log10(n / total) for g, n in quad.items()}
-    return logp, floor
+MAP = {
+    "158": ",",
+    "770": ".",
+    "659": "-",
+    "799": '"',
+    "648": "'",
+    "662": ";",
+    "460": "!",
+    "296": "?",
+    "477": "_",
+    "885": "(",
+    "275": ")",
+    "331": ":",
+    "955": "\n",
+    "506": "\n",
+    "309": "\n",
+    "394": "4",
+    "186": "7",
+    "443": "I",
+    "457": "a",
+    "101": "h",
+    "117": "h",
+    "903": "e",
+    "590": "t",
+    "376": "t",
+    "312": "h",
+    "580": "s",
+    "370": "o",
+    "189": "t",
+    "679": "s",
+    "380": "u",
+    "672": "w",
+    "760": "i",
+    "357": "s",
+    "822": "r",
+    "273": "n",
+    "496": "l",
+    "103": "r",
+    "111": "l",
+    "127": "f",
+    "130": "d",
+    "144": "c",
+    "175": "p",
+    "178": "g",
+    "188": " ",
+    "199": "m",
+    "201": " ",
+    "213": "s",
+    "225": "n",
+    "231": " ",
+    "253": "y",
+    "260": "v",
+    "262": " ",
+    "279": "k",
+    "299": "i",
+    "303": "h",
+    "324": "w",
+    "342": "v",
+    "368": "e",
+    "371": "t",
+    "372": "o",
+    "387": "a",
+    "400": "n",
+    "430": "e",
+    "434": "u",
+    "495": ",",
+    # "109": "?",
+    # "154": "?",
+    # "199": "?",
+    # "243": "?",
+    # "306": "?",
+    # "317": "?",
+    # "381": "?",
+    # "386": "?",
+    # "431": "?",
+    # "448": "?",
+    # "456": "?",
+    # "496": "?",
+    # "512": "?",
+    # "523": "?",
+    # "530": "?",
+    # "548": "?",
+    # "562": "?",
+    # "564": "?",
+    # "565": "?",
+    # "573": "?",
+    # "593": "?",
+    # "621": "?",
+    # "638": "?",
+    # "672": "?",
+    # "680": "?",
+    # "685": "?",
+    # "686": "?",
+    # "692": "?",
+    # "695": "?",
+    # "704": "?",
+    # "708": "?",
+    # "717": "?",
+    # "722": "?",
+    # "734": "?",
+    # "737": "?",
+    # "744": "?",
+    # "751": "?",
+    # "752": "?",
+    # "756": "?",
+    # "760": "?",
+    # "769": "?",
+    # "775": "?",
+    # "777": "?",
+    # "783": "?",
+    # "796": "?",
+    # "797": "?",
+    # "805": "?",
+    # "822": "?",
+    # "833": "?",
+    # "847": "?",
+    # "851": "?",
+    # "857": "?",
+    # "881": "?",
+    # "914": "?",
+    # "939": "?",
+    # "975": "?",
+}
 
-def score_english(text, logp, floor):
-    t = re.sub(r"[^a-z ]", "", text.lower())
-    t = t.replace(" ", "")
-    s = 0.0
-    for i in range(len(t) - 3):
-        s += logp.get(t[i:i+4], floor)
-    return s
+for code in SPACE_CODES:
+    MAP[code] = " "
 
-def decode(tokens, mapping):
-    return "".join(mapping[t] for t in tokens)
+def chunk3(s: str):
+    s = "".join(ch for ch in s if ch.isdigit())
+    if len(s) % 3 != 0:
+        raise ValueError(f"Ciphertext length {len(s)} is not divisible by 3.")
+    return [s[i:i+3] for i in range(0, len(s), 3)]
 
-def random_init_mapping(codes):
-    # bias: frequent codes more likely to be space/e/t/a/o/n
-    mapping = {}
-    for c in codes:
-        mapping[c] = random.choice(ALPHABET)
+def decode(cipher_digits: str, top_n: int = 25):
+    chunks = chunk3(cipher_digits)
+    out = []
+    unknown_counts = Counter()
 
-    return mapping
-
-def crack(tokens, logp, floor, steps=200000, T0=5.0, cooling=0.99995, sample_len=12000):
-    sample = tokens[:min(sample_len, len(tokens))]
-    codes = list(sorted(set(sample)))
-
-    mapping = random_init_mapping(codes)
-
-    # Frequency bias: push top codes toward common letters + space
-    freq = Counter(sample)
-    top_codes = [c for c, _ in freq.most_common(40)]
-    common = list("     eeeeetttaaaooonnniisshhr")  # includes many spaces
-    for c in top_codes:
-        mapping[c] = random.choice(common)
-
-    cur = decode(sample, mapping)
-    cur_score = score_english(cur, logp, floor)
-    best_score = cur_score
-    best_map = mapping.copy()
-    best_text = cur
-
-    T = T0
-    for step in range(steps):
-        c = random.choice(codes)
-        old = mapping[c]
-        new = random.choice(ALPHABET)
-        if new == old:
-            T *= cooling
-            continue
-
-        mapping[c] = new
-        cand = decode(sample, mapping)
-        cand_score = score_english(cand, logp, floor)
-
-        d = cand_score - cur_score
-        if d >= 0 or random.random() < math.pow(10, d / max(T, 1e-9)):
-            cur, cur_score = cand, cand_score
-            if cand_score > best_score:
-                best_score = cand_score
-                best_map = mapping.copy()
-                best_text = cand
+    for c in chunks:
+        if c in MAP:
+            out.append(MAP[c])
         else:
-            mapping[c] = old
+            unknown_counts[c] += 1
+            out.append(f"[{c}]")
 
-        T *= cooling
+    plaintext = "".join(out)
 
-    return best_map, best_text, best_score
+    words = plaintext.split()
+    two_letter = Counter()
+    three_letter = Counter()
+
+    for w in words:
+        if w.startswith("[") and w.endswith("]"):
+            inner = w[1:-1]
+            parts = inner.split("][")
+            if len(parts) == 2:
+                two_letter[w] += 1
+            elif len(parts) == 3:
+                three_letter[w] += 1
+
+    print(f"Total 3-digit symbols: {len(chunks)}")
+    print(f"Distinct unknown symbols: {len(unknown_counts)}")
+
+    if unknown_counts:
+        print("\nTop unknown symbols by frequency:")
+        for code, cnt in unknown_counts.most_common(top_n):
+            print(f"{code}: {cnt}")
+
+    print("\nTop 2-letter words (as code-pairs):")
+    for w, cnt in two_letter.most_common(15):
+        print(f"{w}: {cnt}")
+
+    print("\nTop 3-letter words (as code-triples):")
+    for w, cnt in three_letter.most_common(15):
+        print(f"{w}: {cnt}")
+
+    return plaintext, unknown_counts, two_letter, three_letter
 
 if __name__ == "__main__":
-    # change these:
-    CIPHER_PATH = Path(r"C:\Users\Michael Buzzetta\Documents\CS579\CS579-Proj1\ctxts\13.txt")
-    QUADGRAM_PATH = "english_quadgrams.txt"
+    ciphertext = CIPHERTEXT_PATH.read_text(encoding="utf-8", errors="ignore")
+    plaintext, unknown_counts, two_letter, three_letter = decode(ciphertext, top_n=30)
 
-    tokens = load_cipher(CIPHER_PATH)
-    logp, floor = load_quadgrams(QUADGRAM_PATH)
+    print("\n--- DECODED (PARTIAL) OUTPUT START ---\n")
+    print(plaintext[:5000])
+    print("\n--- DECODED (PARTIAL) OUTPUT END ---\n")
 
-    best_map, preview, sc = crack(tokens, logp, floor)
-
-    # apply best map to full ciphertext (unknown codes show as [?])
-    codes_full = set(tokens)
-    mapping_full = {c: best_map.get(c, "?") for c in codes_full}
-    plaintext = decode(tokens, mapping_full)
-
-    print("=== PREVIEW (sample) ===")
-    print(preview[:1000])
-    print("\n=== FULL DECODE ===")
-    print(plaintext)
+    out_path = CIPHERTEXT_PATH.with_name("03_partial_decoded.txt")
+    out_path.write_text(plaintext, encoding="utf-8")
+    print(f"Wrote full partial decode to: {out_path}")
