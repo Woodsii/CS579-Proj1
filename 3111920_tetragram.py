@@ -1,7 +1,7 @@
 from pathlib import Path
 from collections import Counter
 
-CIPHERTEXT_PATH = Path(r"C:\Users\Michael Buzzetta\Documents\CS579\CS579-Proj1\ctxts\11.txt")
+CIPHERTEXT_PATH = Path(r"C:\Users\Michael Buzzetta\Documents\CS579\CS579-Proj1\ctxts\03.txt")
 
 
 MAP = {
